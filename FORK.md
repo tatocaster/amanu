@@ -119,3 +119,9 @@ For the reasoning behind particular implementation choices, see
 [`docs/specs`](docs/specs/). The [release notes](docs/) provide the chronological
 record. Together those documents carry details that would make this provenance
 note duplicate the rest of the repository and go stale again.
+
+## Analytics
+
+In this fork product analytics is permanently off: the reporter never starts,
+the send path is a no-op, the Settings and Setup switch is gone, and any old
+`~/.config/amanu/analytics*.json` is deleted at launch.

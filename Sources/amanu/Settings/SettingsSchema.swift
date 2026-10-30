@@ -533,16 +533,6 @@ enum SettingsSchema {
                           + "расшифровка и саммари."),
                   .text, describedAs: localised("nothing", "ничего")),
         ]),
-        Section(title: localised("Statistics", "Статистика"), entries: [
-            Entry(["analytics"],
-                  localised(
-                      "Send usage statistics",
-                      "Отправлять статистику об использовании"),
-                  localised(
-                      "Feature usage with a random installation identifier; no meeting content.",
-                      "Использование функций со случайным идентификатором установки; без содержимого встреч."),
-                  .toggle, default: true, askedInSetup: true),
-        ]),
     ] }
 
     /// Every entry, including the Apple Silicon ones on a Mac that does not
@@ -729,7 +719,7 @@ enum SettingsSchema {
     /// Older releases exposed these choices. Retained audio now always becomes
     /// one compact stereo M4A, but accepting the keys keeps an old config from
     /// being reported as misspelled until its owner next edits the file.
-    static let deprecatedKeys = ["compress_tracks", "keep_uncompressed"]
+    static let deprecatedKeys = ["compress_tracks", "keep_uncompressed", "analytics"]
 
     /// The settings above that this slice does not render, because there is no
     /// local model behind them. They stay *known*: a config carrying them on

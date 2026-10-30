@@ -33,7 +33,8 @@ final class AnalyticsSink: @unchecked Sendable {
     enum Endpoint {
         static let url = URL(string: "https://stats.amanu.me/api/batch")!
         static let websiteID = "8ece1241-c45f-4976-9b20-d7004b2359b8"
-        static var isConfigured: Bool { !websiteID.hasPrefix("UMAMI_WEBSITE_ID_REPLACE") }
+        // Never configured: analytics is removed in this fork.
+        static var isConfigured: Bool { false }
     }
 
     static let shared = AnalyticsSink()
@@ -123,6 +124,7 @@ final class AnalyticsSink: @unchecked Sendable {
             enabled = switchIsOn()
             guard enabled else {
                 try? FileManager.default.removeItem(at: store)
+                try? FileManager.default.removeItem(at: AnalyticsIdentity.path)
                 return
             }
 
@@ -355,19 +357,9 @@ final class AnalyticsSink: @unchecked Sendable {
         return Batch(body: body, entries: entries)
     }
 
-    private static let post: Transport = { body in
-        var request = URLRequest(url: Endpoint.url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
-        request.httpBody = body
-        request.timeoutInterval = 10
-        guard let count = (try? JSONSerialization.jsonObject(with: body) as? [Any])?.count,
-              let (data, response) = try? await URLSession.shared.data(for: request),
-              let http = response as? HTTPURLResponse
-        else { return .retry }
-        return deliveryResponse(status: http.statusCode, data: data, sentCount: count)
-    }
+    // No network in this fork: everything stays queued, and the queue is
+    // never started anyway.
+    private static let post: Transport = { _ in .retry }
 
     /// HTTP 200 confirms only the batch envelope. Umami reports individual
     /// rejection inside its JSON body; missing or inconsistent receipts must

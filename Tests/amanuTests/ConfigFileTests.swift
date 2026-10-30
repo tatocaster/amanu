@@ -68,13 +68,13 @@ struct ConfigFileTests {
 
     // MARK: - nothing leaves the Mac
 
-    @Test("Analytics is off while the file is broken, whatever the default", .freshHome)
+    @Test("Analytics is always off in this fork, whatever the file says", .freshHome)
     func analyticsIsOff() throws {
-        #expect(AnalyticsIdentity.isEnabled(), "no file means the default, which is on")
+        #expect(!AnalyticsIdentity.isEnabled())
         try Home.current.writeConfig(text: Self.broken)
         #expect(!AnalyticsIdentity.isEnabled())
         try Home.current.writeConfig(["analytics": true])
-        #expect(AnalyticsIdentity.isEnabled())
+        #expect(!AnalyticsIdentity.isEnabled())
     }
 
     /// An engine that notes being asked, which is all this needs to know.
