@@ -155,9 +155,9 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
     /// it did cost, and only this one can be trusted once the files exist.
     private let modelStorage = ModelStorage()
     private let whisperModelStore = WhisperModelStore()
-    private let gigaAMModelStore = GigaAMModelStore()
+    private let georgianModelStore = GeorgianModelStore()
     private var whisperDownloadTask: Task<Void, Never>?
-    private var gigaAMDownloadTask: Task<Void, Never>?
+    private var georgianDownloadTask: Task<Void, Never>?
     private var liveDownloadTask: Task<Void, Never>?
     private var liveDownloading = false
     /// What parakeet weighs on disk once it is there — measured, not quoted:
@@ -356,8 +356,8 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
         parakeetProgress = nil
         whisperDownloadTask?.cancel()
         whisperDownloadTask = nil
-        gigaAMDownloadTask?.cancel()
-        gigaAMDownloadTask = nil
+        georgianDownloadTask?.cancel()
+        georgianDownloadTask = nil
     }
     // MARK: - building
 
@@ -1233,14 +1233,14 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
         if engine == "whisper" {
             downloadWhisperIfNeeded()
         } else if engine == "gigaam" {
-            downloadGigaAMIfNeeded()
+            downloadGeorgianIfNeeded()
         } else {
             downloadParakeetIfNeeded()
         }
     }
 
-    private func downloadGigaAMIfNeeded() {
-        guard gigaAMModelStore.bytesOnDisk == 0, gigaAMDownloadTask == nil else { return }
+    private func downloadGeorgianIfNeeded() {
+        guard georgianModelStore.bytesOnDisk == 0, georgianDownloadTask == nil else { return }
         let asset = "gigaam-v3-e2e-ctc-q8_0"
         Analytics.track(.modelDownloadStarted, [.asset: .text(asset)])
         parakeetBar.minValue = 0
@@ -1248,9 +1248,9 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
         parakeetBar.doubleValue = 0
         parakeetBar.isHidden = false
         parakeetStatus.isHidden = false
-        gigaAMDownloadTask = Task { [self, gigaAMModelStore] in
+        georgianDownloadTask = Task { [self, georgianModelStore] in
             do {
-                _ = try await gigaAMModelStore.download { update in
+                _ = try await georgianModelStore.download { update in
                     Task { @MainActor [self] in
                         parakeetBar.isHidden = false
                         if let fraction = update.fraction {
@@ -1284,7 +1284,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
             parakeetBar.stopAnimation(nil)
             parakeetBar.isIndeterminate = false
             parakeetBar.isHidden = true
-            gigaAMDownloadTask = nil
+            georgianDownloadTask = nil
             refresh()
         }
         refresh()
@@ -1647,7 +1647,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
         guard Platform.supportsLocalModels else { return true }
         switch transcriptionChoice.localEngine {
         case "whisper": return whisperModelStore.bytesOnDisk > 0
-        case "gigaam": return gigaAMModelStore.bytesOnDisk > 0
+        case "gigaam": return georgianModelStore.bytesOnDisk > 0
         default: return parakeetIsHere()
         }
     }
@@ -1886,7 +1886,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
     private func localModel(_ id: String) -> ModelStorage.Model {
         switch id {
         case "whisper": return modelStorage.whisperModel()
-        case "gigaam": return modelStorage.gigaAMModel()
+        case "gigaam": return modelStorage.georgianModel()
         default: return modelStorage.parakeet(version: ParakeetEngine.configuredVersion())
         }
     }
@@ -1898,7 +1898,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
     private func localModelIsDownloading(_ id: String) -> Bool {
         switch id {
         case "whisper": return whisperDownloadTask != nil
-        case "gigaam": return gigaAMDownloadTask != nil
+        case "gigaam": return georgianDownloadTask != nil
         default: return parakeetDownload != nil
         }
     }
@@ -1952,7 +1952,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
             missingLocalModel: localModelIsWantedAndMissing
                 ? transcriptionChoice.localEngine : nil,
             localModelDownloading: parakeetDownload != nil || whisperDownloadTask != nil
-                || gigaAMDownloadTask != nil,
+                || georgianDownloadTask != nil,
             liveModelWanted: live,
             liveModelReady: live && liveModelStore.isReady(language: prompt),
             liveModelDownloading: liveDownloading,

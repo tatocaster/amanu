@@ -1,25 +1,26 @@
 import Foundation
 
-/// The revision-pinned GigaAM-v3 model consumed by transcribe.cpp.
+/// The revision-pinned Georgian NeMo model consumed by transcribe.cpp: the
+/// FastConformer RNN-T from EchoesML/Georgian-NeMo, as LeonardoDaviti's GGUF.
 /// Downloading, verifying and sharing it is `VerifiedModelStore`'s job.
-struct GigaAMModelStore: Sendable {
+struct GeorgianModelStore: Sendable {
     typealias Manifest = VerifiedModelStore.Manifest
     typealias Progress = VerifiedModelStore.Progress
     typealias Error = VerifiedModelStore.Error
     typealias ProgressHandler = VerifiedModelStore.ProgressHandler
     typealias Downloader = VerifiedModelStore.Downloader
 
-    // Handy defaults to Q8_0. It keeps the CTC decoder fast while preserving
-    // punctuation and Cyrillic casing, and is still only 259.5 MiB.
+    // Q8_0 is the quantisation this engine was tested with; it is about
+    // 129 MiB, half the size of the GigaAM model it replaced.
     static let defaultManifest = Manifest(
-        id: "gigaam-v3-e2e-ctc-q8_0",
-        fileName: "gigaam-v3-e2e-ctc-Q8_0.gguf",
-        revision: "075dff81f843cf23d22b4ce943ffdc4dd8650cd7",
+        id: "georgian-nemo-q8_0",
+        fileName: "georgian-nemo-Q8_0.gguf",
+        revision: "deb86504b4e4374429442046fc598be035674e82",
         downloadURL: URL(string:
-            "https://huggingface.co/handy-computer/gigaam-v3-e2e-ctc-gguf/resolve/075dff81f843cf23d22b4ce943ffdc4dd8650cd7/gigaam-v3-e2e-ctc-Q8_0.gguf?download=true"
+            "https://huggingface.co/LeonardoDaviti/Georgian-NeMo-GGUF/resolve/deb86504b4e4374429442046fc598be035674e82/georgian-nemo-Q8_0.gguf?download=true"
         )!,
-        expectedBytes: 272_151_136,
-        sha256: "9ccce4750dc813a493d96ca15ee251712bedec15ac9a02fa3d2bd732f08ae5eb")
+        expectedBytes: 135_383_168,
+        sha256: "5e43433e5ac6933bafcc191a5d518cfe50c66e33d205f29fcc491bfc4fe49625")
 
     static let advertisedDownloadBytes: Int64 = defaultManifest.expectedBytes
 
@@ -27,8 +28,8 @@ struct GigaAMModelStore: Sendable {
 
     init(
         directory: URL = Home.current.url
-            .appendingPathComponent("Library/Application Support/amanu/models/gigaam", isDirectory: true),
-        manifest: Manifest = GigaAMModelStore.defaultManifest,
+            .appendingPathComponent("Library/Application Support/amanu/models/georgian", isDirectory: true),
+        manifest: Manifest = GeorgianModelStore.defaultManifest,
         downloader: @escaping Downloader = { try await ModelDownloader.download(source: $0, partial: $1, progress: $2) }
     ) {
         store = VerifiedModelStore(directory: directory, manifest: manifest, downloader: downloader)

@@ -174,7 +174,7 @@ actor EngineResolver {
 
     static func localEngine(named name: String) -> TranscriptionEngine {
         if name == "whisper" { return WhisperEngine() }
-        if name == "gigaam" { return GigaAMEngine() }
+        if name == "gigaam" { return GeorgianEngine() }
         return ParakeetEngine()
     }
 

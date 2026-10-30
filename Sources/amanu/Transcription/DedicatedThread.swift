@@ -3,7 +3,7 @@ import Foundation
 /// Blocking work on a thread of its own, awaited without holding a thread of
 /// the cooperative pool.
 ///
-/// `whisper_full` and GigaAM's `transcribe_run` block for as long as a chunk
+/// `whisper_full` and the Georgian engine's `transcribe_run` block for as long as a chunk
 /// takes to decode — minutes for a long meeting on a slow Mac — and the pool
 /// has one thread per core. Run there, a transcription held a core's worth of
 /// every actor and every task in the process for its whole length, the

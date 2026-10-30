@@ -90,7 +90,7 @@ struct EmptyTrackTests {
         let url = URL(fileURLWithPath: "/tmp/broken.caf")
         #expect(ParakeetEngine.EngineError.unreadableAudio(url, nil).isPermanent)
         #expect(WhisperEngine.EngineError.unreadableAudio(url, nil).isPermanent)
-        #expect(GigaAMEngine.EngineError.unreadableAudio(url, nil).isPermanent)
+        #expect(GeorgianEngine.EngineError.unreadableAudio(url, nil).isPermanent)
         #expect(!ParakeetEngine.EngineError.notPrepared.isPermanent)
     }
 }

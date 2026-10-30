@@ -28,7 +28,7 @@ actor ParakeetEngine: TranscriptionEngine {
         case notPrepared
         case unreadableAudio(URL, Error?)
 
-        /// The same answer Whisper and GigaAM give: audio that cannot be read
+        /// The same answer Whisper and the Georgian engine give: audio that cannot be read
         /// today will not be readable tomorrow. It used to be no answer at
         /// all, so parakeet retried an unreadable file three times where the
         /// other two local engines retired it at once.

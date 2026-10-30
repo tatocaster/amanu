@@ -26,7 +26,7 @@ struct ModelStorage {
         enum Kind: Equatable {
             case parakeet
             case whisper
-            case gigaAM
+            case georgian
             case live
         }
 
@@ -47,20 +47,20 @@ struct ModelStorage {
 
     private let live: LiveTranscriptionModelStore
     private let whisper: WhisperModelStore
-    private let gigaAM: GigaAMModelStore
+    private let georgian: GeorgianModelStore
     private let parakeetCache: @Sendable (AsrModelVersion) -> URL
 
     init(
         live: LiveTranscriptionModelStore = LiveTranscriptionModelStore(),
         whisper: WhisperModelStore = WhisperModelStore(),
-        gigaAM: GigaAMModelStore = GigaAMModelStore(),
+        georgian: GeorgianModelStore = GeorgianModelStore(),
         parakeetCache: @escaping @Sendable (AsrModelVersion) -> URL = {
             AsrModels.defaultCacheDirectory(for: $0)
         }
     ) {
         self.live = live
         self.whisper = whisper
-        self.gigaAM = gigaAM
+        self.georgian = georgian
         self.parakeetCache = parakeetCache
     }
 
@@ -78,7 +78,7 @@ struct ModelStorage {
             if other.isDownloaded { models.append(other) }
         }
         models.append(whisperModel())
-        models.append(gigaAMModel())
+        models.append(georgianModel())
         models.append(liveModel())
         return models
     }
@@ -102,13 +102,13 @@ struct ModelStorage {
             advertisedBytes: Int(WhisperModelStore.advertisedDownloadBytes))
     }
 
-    func gigaAMModel() -> Model {
+    func georgianModel() -> Model {
         Model(
-            kind: .gigaAM,
-            name: "GigaAM v3",
-            directory: gigaAM.directory,
-            bytes: gigaAM.bytesOnDisk,
-            advertisedBytes: Int(GigaAMModelStore.advertisedDownloadBytes))
+            kind: .georgian,
+            name: "Georgian (NeMo)",
+            directory: georgian.directory,
+            bytes: georgian.bytesOnDisk,
+            advertisedBytes: Int(GeorgianModelStore.advertisedDownloadBytes))
     }
 
     func liveModel() -> Model {
@@ -149,12 +149,12 @@ struct ModelStorage {
         liveEnabled: Bool
     ) -> [(path: [String], value: Any?)] {
         switch kind {
-        case .parakeet, .whisper, .gigaAM:
+        case .parakeet, .whisper, .georgian:
             let deleted: String
             switch kind {
             case .parakeet: deleted = "parakeet"
             case .whisper: deleted = "whisper"
-            case .gigaAM: deleted = "gigaam"
+            case .georgian: deleted = "georgian"
             case .live: preconditionFailure("handled below")
             }
             guard choice.local, choice.localEngine == deleted else { return [] }

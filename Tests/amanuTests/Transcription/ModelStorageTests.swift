@@ -36,7 +36,7 @@ struct ModelStorageTests {
         ModelStorage(
             live: LiveTranscriptionModelStore(root: root.appendingPathComponent("live")),
             whisper: WhisperModelStore(directory: root.appendingPathComponent("whisper")),
-            gigaAM: GigaAMModelStore(directory: root.appendingPathComponent("gigaam")),
+            georgian: GeorgianModelStore(directory: root.appendingPathComponent("georgian")),
             parakeetCache: { version in
                 root.appendingPathComponent(version == .v2 ? "parakeet-v2" : "parakeet-v3")
             })
@@ -62,7 +62,7 @@ struct ModelStorageTests {
         // because its row is where a person reads that it isn't here.
         let empty = storage.all(configured: .v3)
         #expect(empty.map(\.name) == [
-            "parakeet v3", "Whisper large-v3-turbo", "GigaAM v3", "NVIDIA nemotron",
+            "parakeet v3", "Whisper large-v3-turbo", "Georgian (NeMo)", "NVIDIA nemotron",
         ])
         #expect(empty.allSatisfy { !$0.isDownloaded })
         #expect(storage.total(empty) == 0)
@@ -73,7 +73,7 @@ struct ModelStorageTests {
         _ = try Self.directory(root, "parakeet-v3", files: 4)
         let both = storage.all(configured: .v3)
         #expect(both.map(\.name) == [
-            "parakeet v3", "parakeet v2", "Whisper large-v3-turbo", "GigaAM v3",
+            "parakeet v3", "parakeet v2", "Whisper large-v3-turbo", "Georgian (NeMo)",
             "NVIDIA nemotron",
         ])
         #expect(storage.total(both) == 6 * 1024)
@@ -87,7 +87,7 @@ struct ModelStorageTests {
         let storage = ModelStorage(
             live: store,
             whisper: WhisperModelStore(directory: root.appendingPathComponent("whisper")),
-            gigaAM: GigaAMModelStore(directory: root.appendingPathComponent("gigaam")),
+            georgian: GeorgianModelStore(directory: root.appendingPathComponent("georgian")),
             parakeetCache: { _ in root })
 
         let variant = store.variantDirectory(language: "multilingual")
@@ -166,5 +166,22 @@ struct ModelStorageTests {
         #expect(ModelStorage.describe(bytes: 0) == "0 MB")
         // Past a thousand megabytes the number stops being one anybody reads.
         #expect(ModelStorage.describe(bytes: 1_147_483_648) == "1.1 GB")
+    }
+
+    @Test("A leftover GigaAM folder is not listed")
+    func leftoverGigaAMFolderIsIgnored() throws {
+        let root = try Self.temporary()
+        defer { try? FileManager.default.removeItem(at: root) }
+        _ = try Self.directory(root, "gigaam", files: 1)
+        let storage = ModelStorage(
+            live: LiveTranscriptionModelStore(root: root.appendingPathComponent("live")),
+            whisper: WhisperModelStore(directory: root.appendingPathComponent("whisper")),
+            georgian: GeorgianModelStore(directory: root.appendingPathComponent("georgian")),
+            parakeetCache: { _ in root.appendingPathComponent("parakeet") })
+
+        let models = storage.all(configured: .v3)
+
+        #expect(models.allSatisfy { $0.directory.lastPathComponent != "gigaam" })
+        #expect(storage.georgianModel().bytes == 0)
     }
 }

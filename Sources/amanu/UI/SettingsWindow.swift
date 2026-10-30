@@ -412,10 +412,10 @@ final class SettingsWindow: NSObject, NSTextFieldDelegate {
             return localised(
                 "Local multilingual transcription with whisper.cpp.",
                 "Локальная многоязычная расшифровка через whisper.cpp.")
-        case .gigaAM:
+        case .georgian:
             return localised(
-                "Local Russian transcription with transcribe.cpp.",
-                "Локальная русская расшифровка через transcribe.cpp.")
+                "Local Georgian transcription with transcribe.cpp.",
+                "Локальная грузинская расшифровка через transcribe.cpp.")
         case .live:
             return localised(
                 "The live transcript shown during a meeting.",
@@ -492,7 +492,7 @@ final class SettingsWindow: NSObject, NSTextFieldDelegate {
                 "Скачается снова, если её опять включить.")
         }
         switch model.kind {
-        case .parakeet, .whisper, .gigaAM:
+        case .parakeet, .whisper, .georgian:
             if choice.cloud {
                 return freed + localised(
                     "Transcribing on this Mac goes off with it, so meetings go to "

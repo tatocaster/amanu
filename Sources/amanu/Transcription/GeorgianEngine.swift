@@ -1,18 +1,23 @@
 import CTranscribe
 import Foundation
 
-protocol GigaAMRuntime: Sendable {
+protocol GeorgianRuntime: Sendable {
     func prepare(model: URL) async throws
     func transcribe(samples: [Float]) async throws -> String
     func release() async
 }
 
-/// Russian local transcription through Handy's transcribe.cpp GigaAM port.
-/// GigaAM was trained on utterances up to about 25 seconds, so meeting tracks
-/// are decoded and processed as bounded 20-second pieces.
-actor GigaAMEngine: TranscriptionEngine {
+/// Georgian local transcription: a FastConformer RNN-T trained by
+/// EchoesML/Georgian-NeMo, converted to GGUF by LeonardoDaviti, and run
+/// through the same transcribe.cpp runtime that GigaAM used to run on.
+///
+/// Meeting tracks are still decoded as bounded 20-second pieces. That is not
+/// a limit of this model; it is the chunking the engine was written and
+/// tested with, and changing it would mean re-validating chunk boundaries for
+/// no gain.
+actor GeorgianEngine: TranscriptionEngine {
     enum Progress: Equatable, Sendable {
-        case downloading(GigaAMModelStore.Progress)
+        case downloading(GeorgianModelStore.Progress)
         case transcribing(Double)
     }
 
@@ -32,7 +37,7 @@ actor GigaAMEngine: TranscriptionEngine {
             case .unreadableAudio(let url, let error):
                 return "unreadable or empty audio \(url.lastPathComponent)"
                     + (error.map { ": \($0)" } ?? "")
-            case .invalidChunkDuration: return "GigaAM chunk duration must be greater than zero"
+            case .invalidChunkDuration: return "Georgian chunk duration must be greater than zero"
             }
         }
     }
@@ -41,14 +46,14 @@ actor GigaAMEngine: TranscriptionEngine {
     nonisolated let model: String
     nonisolated let input: TranscriptionInput = .perTrack
 
-    private let modelStore: GigaAMModelStore
-    private let runtime: any GigaAMRuntime
+    private let modelStore: GeorgianModelStore
+    private let runtime: any GeorgianRuntime
     private let maximumSamples: Int
     private let progress: @Sendable (Progress) -> Void
 
     init(
-        modelStore: GigaAMModelStore = .init(),
-        runtime: any GigaAMRuntime = GigaAMCPPRuntime(),
+        modelStore: GeorgianModelStore = .init(),
+        runtime: any GeorgianRuntime = GeorgianCPPRuntime(),
         chunkDuration: TimeInterval = 20,
         progress: @escaping @Sendable (Progress) -> Void = { _ in }
     ) {
@@ -108,7 +113,7 @@ actor GigaAMEngine: TranscriptionEngine {
     func release() async { await runtime.release() }
 }
 
-private final class GigaAMCPPRuntime: GigaAMRuntime, @unchecked Sendable {
+private final class GeorgianCPPRuntime: GeorgianRuntime, @unchecked Sendable {
     enum RuntimeError: Swift.Error, CustomStringConvertible {
         case openFailed(String)
         case notPrepared
@@ -116,9 +121,9 @@ private final class GigaAMCPPRuntime: GigaAMRuntime, @unchecked Sendable {
 
         var description: String {
             switch self {
-            case .openFailed(let message): return "transcribe.cpp could not load GigaAM: \(message)"
-            case .notPrepared: return "GigaAM used before prepare()"
-            case .runFailed(let message): return "GigaAM transcription failed: \(message)"
+            case .openFailed(let message): return "transcribe.cpp could not load the Georgian model: \(message)"
+            case .notPrepared: return "Georgian engine used before prepare()"
+            case .runFailed(let message): return "Georgian transcription failed: \(message)"
             }
         }
     }
@@ -127,7 +132,7 @@ private final class GigaAMCPPRuntime: GigaAMRuntime, @unchecked Sendable {
     private var session: OpaquePointer?
 
     func prepare(model: URL) async throws {
-        try await DedicatedThread.run("gigaam load") { [self] in try load(model) }
+        try await DedicatedThread.run("georgian load") { [self] in try load(model) }
     }
 
     private func load(_ model: URL) throws {
@@ -145,20 +150,20 @@ private final class GigaAMCPPRuntime: GigaAMRuntime, @unchecked Sendable {
     }
 
     func transcribe(samples: [Float]) async throws -> String {
-        let state = GigaAMRunState()
+        let state = GeorgianRunState()
         return try await withTaskCancellationHandler {
-            try await DedicatedThread.run("gigaam") { [self] in try decode(samples, state) }
+            try await DedicatedThread.run("georgian") { [self] in try decode(samples, state) }
         } onCancel: {
             state.cancel()
         }
     }
 
-    private func decode(_ samples: [Float], _ state: GigaAMRunState) throws -> String {
+    private func decode(_ samples: [Float], _ state: GeorgianRunState) throws -> String {
         try lock.withLock {
             guard let session else { throw RuntimeError.notPrepared }
             transcribe_set_abort_callback(session, { opaque in
                 guard let opaque else { return false }
-                return Unmanaged<GigaAMRunState>.fromOpaque(opaque)
+                return Unmanaged<GeorgianRunState>.fromOpaque(opaque)
                     .takeUnretainedValue().cancelled
             }, Unmanaged.passUnretained(state).toOpaque())
             defer { transcribe_set_abort_callback(session, nil, nil) }
@@ -189,7 +194,7 @@ private final class GigaAMCPPRuntime: GigaAMRuntime, @unchecked Sendable {
     }
 }
 
-private final class GigaAMRunState: @unchecked Sendable {
+private final class GeorgianRunState: @unchecked Sendable {
     private let lock = NSLock()
     private var value = false
     var cancelled: Bool { lock.withLock { value } }
