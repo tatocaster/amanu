@@ -58,7 +58,16 @@ enum Config {
     /// network nor account, so it is what should catch a session recorded on
     /// a train.
     static func transcriptionEngine() -> String {
-        string(.transcriptionEngine, in: load())
+        resolvingRetired(string(.transcriptionEngine, in: load()))
+    }
+
+    /// GigaAM was a local engine, and a config that chose it chose to keep
+    /// audio on this Mac. An id nobody recognises is read as `auto`, which
+    /// uploads whenever a key exists — so a retired local choice must land on
+    /// the local fallback instead, never silently on a cloud upload. Not on
+    /// georgian: someone who picked GigaAM speaks Russian.
+    static func resolvingRetired(_ engine: String) -> String {
+        engine == "gigaam" ? transcriptionLocalEngine() : engine
     }
 
     /// Which local engine `auto` falls back to. Kept separately for the same

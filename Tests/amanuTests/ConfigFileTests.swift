@@ -158,6 +158,18 @@ struct ConfigFileTests {
         #expect(Config.transcriptionLocalEngine() == "parakeet")
     }
 
+    @Test("A retired gigaam engine choice stays on this Mac as the local fallback",
+          .freshHome(config: #"{"transcription": {"engine": "gigaam"}}"#))
+    func retiredGigaamEngineStaysLocal() {
+        #expect(Config.transcriptionEngine() == "parakeet")
+    }
+
+    @Test("A retired gigaam engine choice follows the configured local engine",
+          .freshHome(config: #"{"transcription": {"engine": "gigaam", "local_engine": "whisper"}}"#))
+    func retiredGigaamEngineFollowsLocalEngine() {
+        #expect(Config.transcriptionEngine() == "whisper")
+    }
+
     @Test("A good file gives the doctor nothing to say", .freshHome(config: #"{"keep_audio": true}"#))
     func doctorIsQuietOtherwise() {
         guard case .ok = DoctorReport.checkConfig().status else {

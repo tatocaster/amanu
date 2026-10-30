@@ -205,6 +205,7 @@ actor EngineResolver {
         hasKey: Bool,
         localModels: Bool
     ) -> EngineChoice {
+        let configured = Config.resolvingRetired(configured)
         // An explicit provider keeps failing on a missing key rather than
         // quietly transcribing locally: the person asked for diarization.
         if Config.cloudEngines.contains(configured) { return .cloud }

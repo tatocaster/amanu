@@ -59,9 +59,12 @@ struct EngineSelectionTests {
         #expect(Self.choice("georgian", key: false, localModels: false) == .unavailable)
     }
 
-    @Test("A config still naming gigaam is treated as auto")
-    func gigaamIsNowUnknown() {
-        #expect(Self.choice("gigaam", key: true, localModels: true) == .cloudOrLocal)
+    /// GigaAM was a local engine; reading its retired id as auto would upload
+    /// audio from someone who chose to keep it on this Mac.
+    @Test("A config still naming gigaam stays local rather than reaching the cloud",
+          .freshHome(config: "{}"))
+    func retiredGigaamStaysLocal() {
+        #expect(Self.choice("gigaam", key: true, localModels: true) == .local)
     }
 
     /// assemblyai is not overridden in either direction: it is chosen for
