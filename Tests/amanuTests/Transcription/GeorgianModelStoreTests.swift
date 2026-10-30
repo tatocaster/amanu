@@ -5,7 +5,7 @@ import Testing
 
 struct GeorgianModelStoreTests {
     private let payload = Data("georgian model bytes".utf8)
-    private let sha256 = "442de2a02580f805d19af697c86dd54b591ee1c72681980c379df7fb80445979"
+    private let sha256 = "5bf72c894735b3156a53413823446bb1fc19acb126a35810d77176890065d8c4"
 
     @Test("The default manifest pins the Georgian NeMo GGUF")
     func defaultManifestPinsGeorgianNeMo() {
