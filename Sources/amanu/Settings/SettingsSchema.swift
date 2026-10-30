@@ -132,8 +132,10 @@ enum SettingsSchema {
                 Entry(["transcription", "local_engine"],
                       localised("Local engine", "Локальный движок"),
                       localised(
-                          "Used when this universal app runs on Apple Silicon.",
-                          "Используется, когда универсальная сборка работает на Apple Silicon."),
+                          "Used when this universal app runs on Apple Silicon. "
+                              + "georgian transcribes Georgian only.",
+                          "Используется, когда универсальная сборка работает на Apple Silicon. "
+                              + "georgian расшифровывает только грузинский."),
                       .choice(["parakeet", "whisper", "georgian"]),
                       default: "parakeet", askedInSetup: true),
                 Entry(["transcription", "language"], localised("Meeting language", "Язык встреч"),
@@ -167,8 +169,10 @@ enum SettingsSchema {
             Entry(["transcription", "local_engine"],
                   localised("Local engine", "Локальный движок"),
                   localised(
-                      "Which private model auto uses when the cloud is unavailable.",
-                      "Какую локальную модель auto использует, когда облако недоступно."),
+                      "Which private model auto uses when the cloud is unavailable. "
+                          + "georgian transcribes Georgian only.",
+                      "Какую локальную модель auto использует, когда облако недоступно. "
+                          + "georgian расшифровывает только грузинский."),
                   .choice(["parakeet", "whisper", "georgian"]),
                   default: "parakeet", askedInSetup: true),
             Entry(["transcription", "language"], localised("Meeting language", "Язык встреч"),

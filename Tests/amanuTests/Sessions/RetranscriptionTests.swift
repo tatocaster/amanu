@@ -499,13 +499,19 @@ struct RetranscriptionTests {
         #expect(RecordingsWindow.inlineRetranscribeTitle(for: missingAudio) == nil)
     }
 
-    @Test("A session marked for gigaam re-transcribes with the configured engine")
+    @Test("A session marked for gigaam re-transcribes with the configured engine",
+          .freshHome(config: #"{"offline_echo_cancellation": false, "transcription": {"engine": "whisper"}}"#))
     func legacyGigaamSessionUsesConfiguredEngine() throws {
         let dir = try Self.settledSession()
         defer { try? FileManager.default.removeItem(at: dir) }
 
+        // The default config would also answer "auto" if the stored value
+        // were ignored outright, so the configured engine is a non-default.
         SessionState.update(dir, with: [SessionState.Key.transcriptionEngine: "gigaam"])
-        #expect(EngineResolver.configuredEngine(for: dir) == Config.transcriptionEngine())
+        #expect(EngineResolver.configuredEngine(for: dir) == "whisper")
+
+        SessionState.update(dir, with: [SessionState.Key.transcriptionEngine: "parakeet"])
+        #expect(EngineResolver.configuredEngine(for: dir) == "parakeet")
     }
 
     @MainActor

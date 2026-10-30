@@ -18,7 +18,7 @@ on your computer.
 | Requirements | macOS 14.2 or later; universal app | Windows 11 24H2 or later, x64 |
 | Signing | Apple Developer ID, notarized | Microsoft Artifact Signing, Fands Software LLC |
 | Recording | Automatic and manual; microphone and call audio | Automatic and manual; microphone and call audio |
-| Local transcription | Parakeet, Whisper, Georgian on Apple Silicon | Parakeet, Whisper, Georgian on x64 |
+| Local transcription | Parakeet, Whisper, Georgian on Apple Silicon | Parakeet, Whisper, GigaAM on x64 |
 | Cloud transcription | AssemblyAI, OpenAI, ElevenLabs | AssemblyAI, OpenAI, ElevenLabs |
 | Summaries | Claude Code, Codex, Anthropic, OpenAI, OpenAI-compatible, Ollama | Claude Code, Codex, Anthropic, OpenAI, OpenAI-compatible, Ollama |
 | Live transcript | Separate local streaming model | Separate local streaming model |
@@ -65,9 +65,9 @@ can be published at different times; release tags and update feeds remain separa
 Recording always happens on your computer. Amanu can also transcribe and
 summarize a meeting without sending its contents anywhere:
 
-- Parakeet, Whisper, and Georgian provide local transcription. macOS local
-  transcription requires Apple Silicon; the Windows app bundles its x64
-  runtime and downloads the selected model from Settings.
+- Parakeet, Whisper, and Georgian provide local transcription on macOS, which
+  requires Apple Silicon; the Windows app offers Parakeet, Whisper, and GigaAM,
+  bundles its x64 runtime and downloads the selected model from Settings.
 - The optional live transcript runs locally.
 - Ollama can write summaries locally when its Base URL is localhost/loopback.
 
@@ -543,7 +543,7 @@ before using this example offline.
 
 - `transcription.*` supports `enabled`, `engine`, `cloud`, `local_engine`,
   `language`, `openai.model`, and `assemblyai.speech_model`. Choose `parakeet`,
-  `whisper`, or `georgian` for local processing, or `assemblyai`, `openai`, or
+  `whisper`, or `gigaam` for local processing, or `assemblyai`, `openai`, or
   `elevenlabs` for a specific cloud engine. `auto` uses the configured cloud
   engine when available and otherwise the selected local engine.
 - `summary.*` supports `enabled`, `backend`, `language`, `model`,
