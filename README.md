@@ -18,7 +18,7 @@ on your computer.
 | Requirements | macOS 14.2 or later; universal app | Windows 11 24H2 or later, x64 |
 | Signing | Apple Developer ID, notarized | Microsoft Artifact Signing, Fands Software LLC |
 | Recording | Automatic and manual; microphone and call audio | Automatic and manual; microphone and call audio |
-| Local transcription | Parakeet, Whisper, GigaAM on Apple Silicon | Parakeet, Whisper, GigaAM on x64 |
+| Local transcription | Parakeet, Whisper, Georgian on Apple Silicon | Parakeet, Whisper, Georgian on x64 |
 | Cloud transcription | AssemblyAI, OpenAI, ElevenLabs | AssemblyAI, OpenAI, ElevenLabs |
 | Summaries | Claude Code, Codex, Anthropic, OpenAI, OpenAI-compatible, Ollama | Claude Code, Codex, Anthropic, OpenAI, OpenAI-compatible, Ollama |
 | Live transcript | Separate local streaming model | Separate local streaming model |
@@ -65,7 +65,7 @@ can be published at different times; release tags and update feeds remain separa
 Recording always happens on your computer. Amanu can also transcribe and
 summarize a meeting without sending its contents anywhere:
 
-- Parakeet, Whisper, and GigaAM provide local transcription. macOS local
+- Parakeet, Whisper, and Georgian provide local transcription. macOS local
   transcription requires Apple Silicon; the Windows app bundles its x64
   runtime and downloads the selected model from Settings.
 - The optional live transcript runs locally.
@@ -436,11 +436,13 @@ only values that differ from the defaults. A compact example:
   launch. With transcription off it runs once the recording is archived; a
   recording that could not be transcribed does not run it.
 - `transcription.*` covers `enabled`, `engine`, `cloud`, `local_engine`, `model`, and `language`.
-  `local_engine` is `parakeet` by default, `whisper`, or `gigaam`; Whisper
-  downloads about 550 MB once. GigaAM v3 downloads about 260 MB and runs
-  locally through Handy's `transcribe.cpp` Metal/CPU runtime. It is Russian-only;
+  `local_engine` is `parakeet` by default, `whisper`, or `georgian`; Whisper
+  downloads about 550 MB once. Georgian downloads about 135 MB and runs
+  locally through Handy's `transcribe.cpp` Metal/CPU runtime. It is Georgian-only;
   Amanu splits long recordings into 20-second pieces to stay inside its trained
-  utterance window.
+  utterance window. The model is EchoesML/Georgian-NeMo, converted to GGUF by
+  LeonardoDaviti/Georgian-NeMo-GGUF with EchoesML's permission. It is released
+  for research and educational purposes only.
   Provider overrides are `transcription.openai.model`,
   `transcription.openai.api_key_path`,
   `transcription.assemblyai.api_key`,
@@ -541,7 +543,7 @@ before using this example offline.
 
 - `transcription.*` supports `enabled`, `engine`, `cloud`, `local_engine`,
   `language`, `openai.model`, and `assemblyai.speech_model`. Choose `parakeet`,
-  `whisper`, or `gigaam` for local processing, or `assemblyai`, `openai`, or
+  `whisper`, or `georgian` for local processing, or `assemblyai`, `openai`, or
   `elevenlabs` for a specific cloud engine. `auto` uses the configured cloud
   engine when available and otherwise the selected local engine.
 - `summary.*` supports `enabled`, `backend`, `language`, `model`,

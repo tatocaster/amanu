@@ -464,7 +464,7 @@ reasoning alone. Worth knowing before trusting any of them in front of someone.
   whether the CDN behind a `resolve/<revision>` redirect honours `Range` for
   both models has not been checked, and neither has two amanu processes
   meeting at the model's lock with a real download between them.
-- **Whisper and GigaAM decoding on their own threads.** The move off the
+- **Whisper and Georgian decoding on their own threads.** The move off the
   cooperative pool is tested with a stand-in for the native call; neither
   runtime has been run that way against a real model, cancellation included.
 

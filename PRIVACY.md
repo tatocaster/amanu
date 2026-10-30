@@ -9,7 +9,7 @@ choose.
 
 - Recording is local. Microphone audio, system audio, and optional live
   transcription are captured and stored on your computer.
-- Parakeet, Whisper, and GigaAM transcription run locally. The optional live
+- Parakeet, Whisper, and Georgian transcription run locally. The optional live
   transcript uses a separate local streaming model on both platforms. Ollama
   summaries run locally when its Base URL is localhost/loopback; another host
   receives the summary input.
