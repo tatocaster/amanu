@@ -52,11 +52,16 @@ struct EngineSelectionTests {
         #expect(Self.choice("whisper", key: false, localModels: false) == .unavailable)
     }
 
-    @Test("GigaAM is a local engine")
-    func gigaAMIsLocal() {
-        #expect(Self.choice("gigaam", key: true, localModels: true) == .local)
-        #expect(Self.choice("gigaam", key: true, localModels: false) == .cloud)
-        #expect(Self.choice("gigaam", key: false, localModels: false) == .unavailable)
+    @Test("Georgian is a local engine")
+    func georgianIsLocal() {
+        #expect(Self.choice("georgian", key: true, localModels: true) == .local)
+        #expect(Self.choice("georgian", key: true, localModels: false) == .cloud)
+        #expect(Self.choice("georgian", key: false, localModels: false) == .unavailable)
+    }
+
+    @Test("A config still naming gigaam is treated as auto")
+    func gigaamIsNowUnknown() {
+        #expect(Self.choice("gigaam", key: true, localModels: true) == .cloudOrLocal)
     }
 
     /// assemblyai is not overridden in either direction: it is chosen for

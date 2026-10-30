@@ -11,6 +11,12 @@ struct TranscriptVersionsTests {
         try SpeakerNames(speakers: ["A": .init(name: "Alice", source: .model)]).write(to: dir)
         try Data("First summary.".utf8).write(to: dir.appendingPathComponent("summary.md"))
     }
+    @Test("Versions made with GigaAM keep their name")
+    func gigaamNameSurvives() {
+        #expect(RecordingsEngineName.name("gigaam") == "GigaAM")
+        #expect(RecordingsEngineName.name("georgian") == "Georgian")
+    }
+
     private func archives(_ dir: URL) -> [URL] {
         (try? FileManager.default.contentsOfDirectory(at: dir.appendingPathComponent("transcripts"),
             includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []

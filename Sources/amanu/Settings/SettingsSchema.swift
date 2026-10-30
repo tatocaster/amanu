@@ -134,7 +134,7 @@ enum SettingsSchema {
                       localised(
                           "Used when this universal app runs on Apple Silicon.",
                           "Используется, когда универсальная сборка работает на Apple Silicon."),
-                      .choice(["parakeet", "whisper", "gigaam"]),
+                      .choice(["parakeet", "whisper", "georgian"]),
                       default: "parakeet", askedInSetup: true),
                 Entry(["transcription", "language"], localised("Meeting language", "Язык встреч"),
                       localised(
@@ -158,7 +158,7 @@ enum SettingsSchema {
                   localised(
                       "auto: the cloud engine when there's a key and the network answers, parakeet otherwise.",
                       "auto — облачный движок, когда есть ключ и отвечает сеть, иначе parakeet."),
-                      .choice(["auto", "assemblyai", "openai", "elevenlabs", "parakeet", "whisper", "gigaam"]), default: "auto", askedInSetup: true),
+                      .choice(["auto", "assemblyai", "openai", "elevenlabs", "parakeet", "whisper", "georgian"]), default: "auto", askedInSetup: true),
             Entry(["transcription", "cloud"], localised("Cloud engine", "Облачный движок"),
                   localised(
                       "Which service auto uploads to when a key is available.",
@@ -169,7 +169,7 @@ enum SettingsSchema {
                   localised(
                       "Which private model auto uses when the cloud is unavailable.",
                       "Какую локальную модель auto использует, когда облако недоступно."),
-                  .choice(["parakeet", "whisper", "gigaam"]),
+                  .choice(["parakeet", "whisper", "georgian"]),
                   default: "parakeet", askedInSetup: true),
             Entry(["transcription", "language"], localised("Meeting language", "Язык встреч"),
                   localised(

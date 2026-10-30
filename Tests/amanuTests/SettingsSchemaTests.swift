@@ -477,8 +477,8 @@ struct SettingsSchemaTests {
         }
     }
 
-    @Test("GigaAM is a configurable local transcription engine")
-    func gigaAMIsInLocalEngineChoices() throws {
+    @Test("Georgian is a configurable local transcription engine")
+    func georgianIsInLocalEngineChoices() throws {
         let entry = try #require(SettingsSchema.sections
             .flatMap(\.entries)
             .first { $0.path == ["transcription", "local_engine"] })
@@ -486,7 +486,8 @@ struct SettingsSchemaTests {
             Issue.record("transcription.local_engine must be a choice")
             return
         }
-        #expect(options.contains("gigaam"))
+        #expect(options.contains("georgian"))
+        #expect(!options.contains("gigaam"))
     }
 }
 

@@ -152,6 +152,12 @@ struct ConfigFileTests {
         #expect(DoctorReport.canContinueIntoSetup([check]))
     }
 
+    @Test("A legacy gigaam local engine falls back to parakeet",
+          .freshHome(config: #"{"transcription": {"local_engine": "gigaam"}}"#))
+    func legacyGigaamFallsBack() {
+        #expect(Config.transcriptionLocalEngine() == "parakeet")
+    }
+
     @Test("A good file gives the doctor nothing to say", .freshHome(config: #"{"keep_audio": true}"#))
     func doctorIsQuietOtherwise() {
         guard case .ok = DoctorReport.checkConfig().status else {

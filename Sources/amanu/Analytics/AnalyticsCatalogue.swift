@@ -145,8 +145,8 @@ enum AnalyticsCatalogue {
         case "whisper":
             return provenance == WhisperModelStore.defaultManifest.id
                 ? "whisper-large-v3-turbo" : "custom"
-        case "gigaam":
-            return provenance == GeorgianModelStore.defaultManifest.id ? "gigaam-v3" : "custom"
+        case "georgian":
+            return provenance == GeorgianModelStore.defaultManifest.id ? "georgian-nemo" : "custom"
         default:
             return "unknown"
         }

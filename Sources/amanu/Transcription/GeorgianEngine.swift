@@ -42,7 +42,7 @@ actor GeorgianEngine: TranscriptionEngine {
         }
     }
 
-    nonisolated let name = "gigaam"
+    nonisolated let name = "georgian"
     nonisolated let model: String
     nonisolated let input: TranscriptionInput = .perTrack
 

@@ -398,9 +398,9 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
             ("whisper", "Whisper large-v3-turbo", localised(
                 "Best multilingual accuracy · about 550 MB",
                 "Лучшая точность на разных языках · около 550 МБ")),
-            ("gigaam", "GigaAM v3", localised(
-                "Alternative for Russian · about 260 MB",
-                "Альтернатива для русского · около 260 МБ")),
+            ("georgian", "Georgian (NeMo)", localised(
+                "Georgian only · about 135 MB",
+                "Только грузинский · около 135 МБ")),
         ]
         let localCards = localChoices.map { id, title, detail in
             let download = SetupLayout.actionButton(
@@ -1232,7 +1232,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
         parakeetStatus.stringValue = ""
         if engine == "whisper" {
             downloadWhisperIfNeeded()
-        } else if engine == "gigaam" {
+        } else if engine == "georgian" {
             downloadGeorgianIfNeeded()
         } else {
             downloadParakeetIfNeeded()
@@ -1241,7 +1241,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
 
     private func downloadGeorgianIfNeeded() {
         guard georgianModelStore.bytesOnDisk == 0, georgianDownloadTask == nil else { return }
-        let asset = "gigaam-v3-e2e-ctc-q8_0"
+        let asset = "georgian-nemo-q8_0"
         Analytics.track(.modelDownloadStarted, [.asset: .text(asset)])
         parakeetBar.minValue = 0
         parakeetBar.maxValue = 1
@@ -1257,16 +1257,16 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
                             parakeetBar.isIndeterminate = false
                             parakeetBar.doubleValue = fraction
                             parakeetStatus.stringValue = localised(
-                                "downloading · \(Int(fraction * 100))% of about 260 MB",
-                                "скачивание · \(Int(fraction * 100))% из примерно 260 МБ")
-                            localEngineCards.card("gigaam")?.report(parakeetStatus.stringValue)
+                                "downloading · \(Int(fraction * 100))% of about 135 MB",
+                                "скачивание · \(Int(fraction * 100))% из примерно 135 МБ")
+                            localEngineCards.card("georgian")?.report(parakeetStatus.stringValue)
                         } else {
                             parakeetBar.isIndeterminate = true
                             parakeetBar.startAnimation(nil)
                             parakeetStatus.stringValue = localised(
-                                "downloading · about 260 MB",
-                                "скачивание · около 260 МБ")
-                            localEngineCards.card("gigaam")?.report(parakeetStatus.stringValue)
+                                "downloading · about 135 MB",
+                                "скачивание · около 135 МБ")
+                            localEngineCards.card("georgian")?.report(parakeetStatus.stringValue)
                         }
                     }
                 }
@@ -1278,7 +1278,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
                     .asset: .text(asset),
                     .reason: .text(Analytics.reason(for: error).rawValue),
                 ])
-                localDownloadErrors["gigaam"] =
+                localDownloadErrors["georgian"] =
                     localised("download failed: ", "не удалось скачать: ") + "\(error)"
             }
             parakeetBar.stopAnimation(nil)
@@ -1647,7 +1647,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
         guard Platform.supportsLocalModels else { return true }
         switch transcriptionChoice.localEngine {
         case "whisper": return whisperModelStore.bytesOnDisk > 0
-        case "gigaam": return georgianModelStore.bytesOnDisk > 0
+        case "georgian": return georgianModelStore.bytesOnDisk > 0
         default: return parakeetIsHere()
         }
     }
@@ -1886,7 +1886,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
     private func localModel(_ id: String) -> ModelStorage.Model {
         switch id {
         case "whisper": return modelStorage.whisperModel()
-        case "gigaam": return modelStorage.georgianModel()
+        case "georgian": return modelStorage.georgianModel()
         default: return modelStorage.parakeet(version: ParakeetEngine.configuredVersion())
         }
     }
@@ -1898,7 +1898,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
     private func localModelIsDownloading(_ id: String) -> Bool {
         switch id {
         case "whisper": return whisperDownloadTask != nil
-        case "gigaam": return georgianDownloadTask != nil
+        case "georgian": return georgianDownloadTask != nil
         default: return parakeetDownload != nil
         }
     }
@@ -1906,7 +1906,7 @@ final class SetupForm: NSObject, NSTextFieldDelegate {
     private func localModelMegabytes(_ id: String) -> Int {
         switch id {
         case "whisper": 550
-        case "gigaam": 260
+        case "georgian": 135
         default: Self.parakeetMegabytes
         }
     }

@@ -179,7 +179,7 @@ struct SetupProgress: Equatable {
     static func modelName(_ engine: String) -> String {
         switch engine {
         case "whisper": return "Whisper"
-        case "gigaam": return "GigaAM"
+        case "georgian": return "Georgian"
         default: return "parakeet"
         }
     }

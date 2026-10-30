@@ -141,12 +141,13 @@ enum TranscriptVersions {
     }
 }
 
-private enum RecordingsEngineName {
+enum RecordingsEngineName {
     static func name(_ id: String) -> String {
         switch id {
         case "local", "parakeet": return "Parakeet"
         case "whisper": return "Whisper"
         case "gigaam": return "GigaAM"
+        case "georgian": return "Georgian"
         case "assemblyai": return "AssemblyAI"
         case "openai": return "OpenAI"
         case "elevenlabs": return "ElevenLabs"

@@ -18,7 +18,7 @@ final class RecordingsWindow: NSObject {
     static var retranscriptionEngines: [RetranscriptionEngine] { [
         .init(id: "parakeet", title: "Parakeet"),
         .init(id: "whisper", title: "Whisper"),
-        .init(id: "gigaam", title: "GigaAM"),
+        .init(id: "georgian", title: "Georgian"),
         .init(id: "assemblyai", title: "AssemblyAI"),
         .init(id: "openai", title: "OpenAI"),
         .init(id: "elevenlabs", title: "ElevenLabs"),

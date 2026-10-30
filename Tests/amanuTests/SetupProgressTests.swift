@@ -54,7 +54,7 @@ struct SetupProgressTests {
     /// The footer said parakeet was missing whatever engine was chosen.
     @Test("The missing local model is named for the engine that is actually chosen")
     func missingModelIsNamed() {
-        for (engine, name) in [("parakeet", "parakeet"), ("whisper", "Whisper"), ("gigaam", "GigaAM")] {
+        for (engine, name) in [("parakeet", "parakeet"), ("whisper", "Whisper"), ("georgian", "Georgian")] {
             let progress = SetupProgress(Machine(missingLocalModel: engine))
             #expect(progress.outstanding == [.localModel(engine)])
             #expect(progress.sentence == "One thing left: \(name)")

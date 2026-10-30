@@ -499,6 +499,15 @@ struct RetranscriptionTests {
         #expect(RecordingsWindow.inlineRetranscribeTitle(for: missingAudio) == nil)
     }
 
+    @Test("A session marked for gigaam re-transcribes with the configured engine")
+    func legacyGigaamSessionUsesConfiguredEngine() throws {
+        let dir = try Self.settledSession()
+        defer { try? FileManager.default.removeItem(at: dir) }
+
+        SessionState.update(dir, with: [SessionState.Key.transcriptionEngine: "gigaam"])
+        #expect(EngineResolver.configuredEngine(for: dir) == Config.transcriptionEngine())
+    }
+
     @MainActor
     @Test("A re-transcribe engine choice is stored with that session")
     func retranscriptionEngineOverride() throws {
@@ -506,7 +515,7 @@ struct RetranscriptionTests {
         defer { try? FileManager.default.removeItem(at: dir) }
 
         #expect(RecordingsWindow.retranscriptionEngines.map(\.id)
-            == ["parakeet", "whisper", "gigaam", "assemblyai", "openai", "elevenlabs"])
+            == ["parakeet", "whisper", "georgian", "assemblyai", "openai", "elevenlabs"])
         RecordingsWindow.markForRetranscription(dir, engine: "whisper")
         #expect(SessionState.value(dir, SessionState.Key.transcriptionEngine) as? String
             == "whisper")

@@ -17,7 +17,7 @@ struct GeorgianEngineTests {
         try await engine.prepare()
         let segments = try await engine.transcribe(audio)
 
-        #expect(engine.name == "gigaam")
+        #expect(engine.name == "georgian")
         #expect(engine.model == "georgian-nemo-q8_0")
         #expect(engine.input.metadataName == "per-track")
         #expect(await runtime.sampleCounts == [320_000, 320_000, 80_000])
